@@ -1,20 +1,77 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Gestión de Inventario</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <form [formGroup]="inventarioForm" (ngSubmit)="onSubmit()">
+    <ion-list lines="full">
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+      <ion-item>
+        <ion-input
+          label="Código de Barras (SKU)"
+          labelPlacement="floating"
+          type="text"
+          formControlName="sku"
+          maxlength="12"
+          [errorText]="inventarioForm.get('sku')?.hasError('required')
+            ? 'El código de barras es obligatorio'
+            : 'Debe tener exactamente 12 caracteres alfanuméricos'"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-input
+          label="Nombre del Producto"
+          labelPlacement="floating"
+          type="text"
+          formControlName="nombre"
+          [errorText]="'El nombre del producto es obligatorio'"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-select
+          label="Categoría"
+          labelPlacement="floating"
+          formControlName="categoria"
+          interface="popover"
+          [errorText]="'Debe seleccionar una categoría'"
+        >
+          @for (cat of categorias; track cat) {
+            <ion-select-option [value]="cat">{{ cat }}</ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-input
+          label="Stock Mínimo"
+          labelPlacement="floating"
+          type="number"
+          inputmode="numeric"
+          formControlName="stockMinimo"
+          [errorText]="inventarioForm.get('stockMinimo')?.hasError('required')
+            ? 'El stock mínimo es obligatorio'
+            : 'Debe ser un número mayor que 0'"
+        ></ion-input>
+      </ion-item>
+
+    </ion-list>
+
+    <div class="ion-padding-top">
+      <ion-button
+        expand="block"
+        type="submit"
+        [disabled]="inventarioForm.invalid || isSubmitting()"
+      >
+        @if (!isSubmitting()) {
+          Guardar Producto
+        } @else {
+          <ion-spinner name="crescent"></ion-spinner>
+        }
+      </ion-button>
+    </div>
+  </form>
 </ion-content>
